@@ -1,3 +1,4 @@
+import { generateToken } from "../../utils/token.js";
 import { authService } from "./auth.service.js";
 import bcrypt from "bcrypt";
 
@@ -45,6 +46,8 @@ const loginUser = async (req, res) => {
             });
         }
 
+        const token = generateToken(user);
+
         res.status(200).json({
             status: "Success",
             message: "Login successful",
@@ -52,7 +55,8 @@ const loginUser = async (req, res) => {
                 _id: user._id,
                 name: user.name,
                 email: user.email
-            }
+            },
+            token: token
         });
     } catch (error) {
         res.status(500).json({
