@@ -1,4 +1,13 @@
 import { sceneService } from "./scene.service.js";
+import { v4 as uuidv4 } from "uuid";
+
+const object = {
+    id: uuidv4(),
+    type,
+    position: position || { x: 0, y: 0, z: 0 },
+    rotation: rotation || { x: 0, y: 0, z: 0 },
+    scale: scale || { x: 1, y: 1, z: 1 }
+};
 
 const addObject = async (req, res) => {
     try {
@@ -6,6 +15,7 @@ const addObject = async (req, res) => {
         const { type, position, rotation, scale } = req.body;
 
         const object = {
+            id: uuidv4(),
             type,
             position: position || { x: 0, y: 0, z: 0 },
             rotation: rotation || { x: 0, y: 0, z: 0 },
@@ -81,8 +91,34 @@ const saveScene = async (req, res) => {
     }
 };
 
+const updateObjectPosition = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const { objectId, position } = req.body;
+
+        await sceneService.updateObjectPosition(
+            userId,
+            objectId,
+            position
+        );
+
+        res.status(200).json({
+            status: "Success",
+            message: "Object position updated successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            status: "Error",
+            message: error.message
+        });
+    }
+};
+
 export const sceneController = {
     addObject,
     loadScene,
-    saveScene
+    saveScene,
+    updateObjectPosition
 };

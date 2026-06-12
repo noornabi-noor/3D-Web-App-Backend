@@ -40,8 +40,40 @@ const saveScene = async (userId, objects) => {
     );
 };
 
+const updateObjectPosition = async (userId, objectId, position) => {
+    const db = getDB();
+
+    const scene = await db.collection("scenes").findOne({ userId });
+
+    if (!scene) {
+        throw new Error("Scene not found");
+    }
+
+    const updatedObjects = scene.objects.map((object) => {
+        if (object.id === objectId) {
+            return {
+                ...object,
+                position
+            };
+        }
+
+        return object;
+    });
+
+    return await db.collection("scenes").updateOne(
+        { userId },
+        {
+            $set: {
+                objects: updatedObjects,
+                updatedAt: new Date()
+            }
+        }
+    );
+};
+
 export const sceneService = {
     addObject,
     getSceneByUser,
-    saveScene
-};
+    saveScene,
+    updateObjectPosition
+};  
