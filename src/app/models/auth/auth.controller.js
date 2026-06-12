@@ -67,7 +67,22 @@ const loginUser = async (req, res) => {
     }
 }
 
+const logoutUser = async (req, res) => {
+    try {
+        res.status(200).json({
+            status: "Success",
+            message: "Logout successful"
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: "Error",
+            message: error.message
+        });
+    }
+};
+
 export const authController = {
     createUser,
-    loginUser
+    loginUser,
+    logoutUser
 };
