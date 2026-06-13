@@ -15,9 +15,10 @@ let db;
 async function connectDB() {
   await client.connect();
 
-  db = client.db("mydatabase");
+  const dbName = (process.env.DB_NAME || "mydatabase").trim().toLowerCase();
+  db = client.db(dbName);
 
-  console.log("MongoDB Connected");
+  console.log(`MongoDB Connected to ${dbName}`);
 }
 
 function getDB() {
